@@ -2,22 +2,34 @@ name: Sync Fork
 
 on:
   schedule:
-    - cron: '0 */3 * * *' # 6시간마다
-  workflow_dispatch: # 수동 실행도 허용
+    - cron: '0 */3 * * *' # 3시간마다
+  workflow_dispatch:
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout fork
+      - name: Checkout main branch
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Set up Git
         run: |
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
           git remote add upstream https://github.com/prgrms-aibe-devcourse/AIBE3-Project1-Team04.git
-          git fetch upstream
+          git fetch upstream --unshallow
+
+      - name: Clean merge state
+        run: |
+          git reset --hard
+          git clean -fd
+
+      - name: Merge upstream/main into fork/main
+        run: |
           git checkout main
           git merge upstream/main --allow-unrelated-histories
-          git push origin main
+
+      - name: Push to origin
+        run: git push origin main
