@@ -19,5 +19,5 @@ jobs:
           git remote add upstream https://github.com/prgrms-aibe-devcourse/AIBE3-Project1-Team04.git
           git fetch upstream
           git checkout main
-          git merge upstream/main
+          git merge upstream/main --allow-unrelated-histories
           git push origin main
