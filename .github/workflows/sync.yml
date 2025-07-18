@@ -14,22 +14,12 @@ jobs:
         with:
           ref: main
 
-      - name: Set up Git
+      - name: Set up Git and Merge
         run: |
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
           git remote add upstream https://github.com/prgrms-aibe-devcourse/AIBE3-Project1-Team04.git
-          git fetch upstream --unshallow
-
-      - name: Clean merge state
-        run: |
-          git reset --hard
-          git clean -fd
-
-      - name: Merge upstream/main into fork/main
-        run: |
+          git fetch upstream --unshallow || true
           git checkout main
           git merge upstream/main --allow-unrelated-histories
-
-      - name: Push to origin
-        run: git push origin main
+          git push origin main
