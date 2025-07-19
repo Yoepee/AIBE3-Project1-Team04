@@ -5,7 +5,8 @@ import Header from '../../../components/Header';
 import { usePlace } from '@/hooks/usePlace';
 import { PlaceWithUserAction } from '@/types/place.type';
 import { format } from 'date-fns';
-import { formatCost } from '@/lib/cost';
+import { formatCost } from '@/lib/place';
+import PlaceReviewForm from '@/components/places/PlaceReviewForm';
 
 interface PlaceDetailProps {
   placeId: string;
@@ -13,8 +14,8 @@ interface PlaceDetailProps {
 
 export default function PlaceDetail({ placeId }: PlaceDetailProps) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const { getPlaceWithUserAction } = usePlace();
   const [place, setPlace] = useState<PlaceWithUserAction | null>();
+  const { getPlaceWithUserAction } = usePlace();
 
   const fetchAllPlaces = useCallback(async () => {
     try {
@@ -29,7 +30,7 @@ export default function PlaceDetail({ placeId }: PlaceDetailProps) {
     fetchAllPlaces();
   }, [fetchAllPlaces]);
 
-  if (!place) return '잘못된 여행지입니다.';
+  if (!place) return;
 
   return (
     <div className="min-h-screen bg-white">
@@ -92,7 +93,9 @@ export default function PlaceDetail({ placeId }: PlaceDetailProps) {
                   <div className="flex items-center">
                     <i className="ri-calendar-line mr-3 w-5 h-5 flex items-center justify-center text-gray-600"></i>
                     <span className="text-gray-600">작성일:</span>
-                    <span className="ml-2 font-medium">작성일일</span>
+                    <span className="ml-2 font-medium">
+                      {format(place.created_at, 'yyyy-MM-dd HH:mm:ss')}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -156,6 +159,7 @@ export default function PlaceDetail({ placeId }: PlaceDetailProps) {
             </div>
           </div>
         </div>
+        <PlaceReviewForm placeId={placeId} />
       </div>
     </div>
   );
